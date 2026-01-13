@@ -1,0 +1,162 @@
+# 🔐 AI-Coded App Security Checklist
+> Prevent critical vulnerabilities in AI-generated / vibe-coded applications
+
+> Rule of thumb: **Never trust the client. Never trust the AI blindly.**
+
+---
+
+## 1️⃣ Never Talk to the Database Directly from the Client
+
+❌ Frontend → Database (Supabase / Firebase direct access)
+
+✅ Correct Pattern:
+Frontend → **Backend API (Middleware)** → Database
+
+**Why?**
+Direct DB access is like leaving your front door open. Anyone can bypass UI rules.
+
+**Action**
+- Always create a backend layer (API / serverless function)
+- Move all DB logic to the server
+
+---
+
+## 2️⃣ Gatekeep Every Single Action (Authorization Everywhere)
+
+❌ User is logged in → allow everything
+
+✅ Correct Pattern:
+- Every endpoint must verify:
+  - Who the user is
+  - What they are allowed to do
+
+**Action**
+- Check permissions on **every API request**
+- Never assume login = authorization
+
+> Treat each endpoint like a high-security door
+
+---
+
+## 3️⃣ Never Hide Premium Features on the Client
+
+❌ Ask backend: `isPremium = false` → hide button in UI
+
+✅ Correct Pattern:
+- Backend only sends premium data **if user is premium**
+
+**Why?**
+Users can modify frontend responses easily.
+
+**Action**
+- Do permission checks on the server
+- Deliver premium content conditionally from backend
+
+---
+
+## 4️⃣ Keep Secrets Off the Browser
+
+❌ API keys in frontend code
+❌ Stripe / OpenAI keys in client JS
+
+✅ Correct Pattern:
+- Secrets live **only on the server**
+
+**Rule**
+> If it runs in the browser, it’s public.
+
+---
+
+## 5️⃣ `.env` Files ≠ Security
+
+❌ Assuming `.env` makes secrets safe
+
+**Reality**
+- `.env` only prevents Git commits
+- Keys can still be bundled into client code
+
+**Action**
+- Double-check what gets shipped to the browser
+- Use server-only environment variables
+
+---
+
+## 6️⃣ Never Do Sensitive Math on the Client
+
+❌ Price calculations
+❌ Score logic
+❌ Credit / quota math on frontend
+
+✅ Correct Pattern:
+- Perform all calculations on the backend
+
+**Why?**
+Users can manipulate client-side logic.
+
+---
+
+## 7️⃣ Sanitize All Inputs (No Exceptions)
+
+❌ Trusting user input
+❌ Directly inserting text into DB
+
+✅ Correct Pattern:
+- Sanitize all inputs
+- Treat user input as plain text, never commands
+
+**Protects Against**
+- SQL injection
+- NoSQL injection
+- XSS
+- Broken queries
+
+---
+
+## 8️⃣ Rate Limit Everything
+
+❌ Unlimited button clicks
+❌ Unlimited API calls
+
+✅ Correct Pattern:
+- Rate limit per user / IP / token
+
+**Why?**
+- Prevent abuse
+- Prevent cost explosions
+- Prevent DoS-style attacks
+
+---
+
+## 9️⃣ Never Log Sensitive Data
+
+❌ Logging passwords
+❌ Logging tokens
+❌ Logging emails
+
+**Action**
+- Remove debug logs before production
+- Mask sensitive fields
+
+> Logs are often more dangerous than databases.
+
+---
+
+## 🔟 Audit with a Rival AI
+
+**Best Practice**
+- If you coded with one AI, audit with another
+
+**Example**
+- Build with Claude → audit with Gemini
+- Build with GPT → audit with Claude
+
+**Why?**
+Different models catch different failure modes.
+
+---
+
+## ✅ Final Rule
+
+> **AI can write code fast. Humans must enforce boundaries.**
+
+Security is not optional — especially in AI-generated apps.
